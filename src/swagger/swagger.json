@@ -1,0 +1,468 @@
+
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HotelQuick API",
+    "description": "API documentation for HotelQuick system",
+    "version": "1.0.0",
+    "contact": {
+      "email": "info@hotelquick.example"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "Local development server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "hotels",
+      "description": "Operations about hotels"
+    },
+    {
+      "name": "bookings",
+      "description": "Operations about bookings"
+    }
+  ],
+  "paths": {
+    "/hotels": {
+      "get": {
+        "tags": ["hotels"],
+        "summary": "Get all hotels",
+        "description": "Returns a list of all hotels",
+        "operationId": "fetchHotels",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Hotel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["hotels"],
+        "summary": "Add a new hotel",
+        "description": "Create a new hotel in the system",
+        "operationId": "createHotel",
+        "requestBody": {
+          "description": "Hotel object that needs to be added to the system",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HotelInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Hotel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}": {
+      "get": {
+        "tags": ["hotels"],
+        "summary": "Find hotel by ID",
+        "description": "Returns a single hotel",
+        "operationId": "fetchHotelById",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "description": "ID of hotel to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Hotel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Hotel not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["hotels"],
+        "summary": "Update an existing hotel",
+        "description": "Update a hotel in the system",
+        "operationId": "updateHotel",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "description": "ID of hotel to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Hotel object with updated fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HotelInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Hotel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Hotel not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["hotels"],
+        "summary": "Delete a hotel",
+        "description": "Delete a hotel from the system",
+        "operationId": "deleteHotel",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "description": "ID of hotel to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Hotel not found"
+          }
+        }
+      }
+    },
+    "/bookings": {
+      "get": {
+        "tags": ["bookings"],
+        "summary": "Get bookings by user ID and role",
+        "description": "Returns bookings filtered by user ID and role",
+        "operationId": "fetchBookings",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "description": "Role of the user (consumer or provider)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["consumer", "provider"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Booking"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["bookings"],
+        "summary": "Create a new booking",
+        "description": "Add a new booking to the system",
+        "operationId": "createBooking",
+        "requestBody": {
+          "description": "Booking object that needs to be added to the system",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/bookings/{bookingId}/status": {
+      "put": {
+        "tags": ["bookings"],
+        "summary": "Update booking status",
+        "description": "Update the status of an existing booking",
+        "operationId": "updateBookingStatus",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "in": "path",
+            "description": "ID of booking to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New status for the booking",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["pending", "confirmed", "rejected"]
+                  }
+                },
+                "required": ["status"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Booking not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Hotel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "float"
+          },
+          "rating": {
+            "type": "number",
+            "format": "float"
+          },
+          "image": {
+            "type": "string"
+          },
+          "rooms": {
+            "type": "integer"
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "providerId": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "description", "address", "price", "providerId"]
+      },
+      "HotelInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "float"
+          },
+          "image": {
+            "type": "string"
+          },
+          "rooms": {
+            "type": "integer"
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "providerId": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "description", "address", "price", "providerId"]
+      },
+      "Booking": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "hotelId": {
+            "type": "string"
+          },
+          "consumerId": {
+            "type": "string"
+          },
+          "checkIn": {
+            "type": "string",
+            "format": "date"
+          },
+          "checkOut": {
+            "type": "string",
+            "format": "date"
+          },
+          "guests": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "confirmed", "rejected"]
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "float"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "hotelId", "consumerId", "checkIn", "checkOut", "guests", "status"]
+      },
+      "BookingInput": {
+        "type": "object",
+        "properties": {
+          "hotelId": {
+            "type": "string"
+          },
+          "consumerId": {
+            "type": "string"
+          },
+          "checkIn": {
+            "type": "string",
+            "format": "date"
+          },
+          "checkOut": {
+            "type": "string",
+            "format": "date"
+          },
+          "guests": {
+            "type": "integer"
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "required": ["hotelId", "consumerId", "checkIn", "checkOut", "guests", "totalPrice"]
+      }
+    }
+  }
+}
